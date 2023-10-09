@@ -1,3 +1,20 @@
 plugins {
     id "com.github.node-gradle.node" version "7.0.0"
 }
+
+task runApiTests(type: Exec) {
+    commandLine 'npm.cmd', 'run', 'db:delete:dev'
+    commandLine 'npm.cmd', 'run', 'db:create:dev'
+    commandLine 'npm.cmd', 'run', 'migrate:dev'
+    commandLine 'npm', 'run', 'jest', '--coverage', '--coverageReporters=html', '--runInBand', '--testPathPattern=api'
+
+    doLast {
+        println "Npm commands executed: db:delete:dev, db:create:dev, migrate:dev, jest"
+    }
+}
+
+// Define task dependencies to ensure the commands run in order
+//runApiTests.dependsOn ':nodeSetup', 'npmInstall'
+
+// Optionally, specify a description for the task
+runApiTests.description = 'Run npm commands in order: db:delete:dev, db:create:dev, migrate:dev, jest'
