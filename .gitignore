@@ -8,4 +8,8 @@ npm-debug.log
 /dist
 /coverage
 report.html
- 
+# Exclude Gradle build files and directories
+.gradle/
+gradle/
+gradlew
+gradlew.bat
