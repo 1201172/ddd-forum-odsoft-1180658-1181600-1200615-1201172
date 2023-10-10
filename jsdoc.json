@@ -1,0 +1,12 @@
+{
+    "source": {
+        "include": ["./dist/"],
+        "exclude": ["node_modules"]
+    },
+    "opts": {
+        "destination": "docs/jsdoc",
+        "recurse": true
+    },
+    "tsconfig": "./tsconfig.json" // Adjust the path as needed
+}
+  
