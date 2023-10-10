@@ -10,5 +10,9 @@ task installDependenciesAndBuild(type: Exec) {
         commandLine npm, 'run-script', 'installDependenciesAndBuild'   
 }
 
+task docs_generation(type: Exec) {
+    commandLine 'jsdoc', '-c', 'jsdoc.json'
+}
+
 
 
