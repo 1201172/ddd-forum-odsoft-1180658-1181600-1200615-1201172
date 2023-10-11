@@ -7,23 +7,32 @@ node {
     version = '12.22.12'
 
     // Version of npm to use.
-    npmVersion = '6.14.16'
+    //npmVersion = '6.14.16'
 
     // If true, it will download node using above parameters.
     // If false, it will try to use globally installed node.
     download = true
 }
 
-task runApiTests(type: Exec) {
+task initializeDocker(type: Exec) {
+    commandLine 'docker', 'compose', 'up'
+}
+
+task initializeBackend(type: Exec) {
+    dependsOn initializeDocker
+    commandLine 'npm', 'run', 'start:dev'
+}
+
+task npm_run_test_dev(type: Exec) {
+    dependsOn 'npmInstall' // Add the npmInstall task as a dependency
+    commandLine 'npm.cmd', 'run', 'test:dev'
+}
+
+task runApiTests() {
     doLast {
         exec {
-            commandLine 'npm', 'run', 'test'
-        }
-        exec {
-            commandLine 'npm', 'run', 'test:dev'
-        }
-        exec {
-            commandLine 'npm', 'run', 'test:api'
+            commandLine 'npm.cmd', 'run', 'test'
+            commandLine 'docker', 'compose'
         }
     }
 
