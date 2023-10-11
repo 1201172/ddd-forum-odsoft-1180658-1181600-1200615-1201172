@@ -4,7 +4,7 @@ plugins {
 
 import org.gradle.internal.os.OperatingSystem
 OperatingSystem os = OperatingSystem.current();
-String npm = os.isLinux() ? 'npm' : 'npm.cmd'
+String npm = os.isLinux() || os.isMacOsX() ? 'npm' : 'npm.cmd'
 
 task installDependenciesAndBuild(type: Exec) {
         commandLine npm, 'run-script', 'installDependenciesAndBuild'   
