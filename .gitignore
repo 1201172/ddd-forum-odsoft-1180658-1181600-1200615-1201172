@@ -9,11 +9,14 @@ npm-debug.log
 /coverage
 report.html
 
+# Exclude Gradle build files and directories
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
 #VSCODE Files
 ./vscode
 
 #set of configuration files
 .idea/*
-
-# Gradle internal files
-.gradle/

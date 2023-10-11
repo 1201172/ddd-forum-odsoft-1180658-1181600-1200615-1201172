@@ -68,7 +68,7 @@ export class PostRepo implements IPostRepo {
     : postId;
 
     const result = await this.models.sequelize.query(
-      `SELECT COUNT(*) FROM comment WHERE post_id = "${postId}";`
+      `SELECT COUNT(*) FROM comment WHERE post_id = "${postId}" AND parent_comment_id IS NULL;`
     );
     const count = result[0][0]['COUNT(*)'];
     return count;
@@ -97,6 +97,7 @@ export class PostRepo implements IPostRepo {
     const PostModel = this.models.Post;
     const detailsQuery = this.createBaseDetailsQuery();
     detailsQuery.offset = offset ? offset : detailsQuery.offset;
+    detailsQuery.limit = 5;
     detailsQuery['order'] = [
       ['points', 'DESC'],
     ];
