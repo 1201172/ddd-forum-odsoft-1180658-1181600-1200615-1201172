@@ -6,7 +6,6 @@
     "opts": {
         "destination": "docs/jsdoc",
         "recurse": true
-    },
-    "tsconfig": "./tsconfig.json" // Adjust the path as needed
+    }
 }
   
