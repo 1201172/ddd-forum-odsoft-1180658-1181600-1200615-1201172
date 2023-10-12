@@ -22,31 +22,37 @@ node {
     download = true
 }
 
+task shutdownDocker(type: Exec) {
+    commandLine 'docker', 'compose', 'down'
+}
+
 task initializeDocker(type: Exec) {
-    commandLine 'docker', 'compose', 'up'
+    dependsOn 'shutdownDocker'
+    commandLine 'docker', 'compose', 'up', '-d'
+}
+
+task setupDocker(type: Exec) {
+    dependsOn initializeDocker
+    commandLine npm, 'run', 'setup:dev'
 }
 
 task initializeBackend(type: Exec) {
-    dependsOn initializeDocker
-    commandLine 'npm', 'run', 'start:dev'
+    dependsOn initializeDocker //let's assume database is setup?
+    commandLine npm, 'run', 'start:dev', '-d'
 }
 
 task npm_run_test_dev(type: Exec) {
     dependsOn 'npmInstall' // Add the npmInstall task as a dependency
-    commandLine 'npm.cmd', 'run', 'test:dev'
+    commandLine npm, 'run', 'test:dev'
 }
 
-task runApiTests() {
-    doLast {
-        exec {
-            commandLine 'npm.cmd', 'run', 'test'
-            commandLine 'docker', 'compose'
-        }
-    }
+task runApiTests(type: Exec) {
+    dependsOn initializeBackend
+    commandLine npm, 'run', 'test:api'
+}
 
-    doLast {
-        println "Npm commands executed: db:delete:dev, db:create:dev, migrate:dev, jest"
-    }
+task runApiTestsWithoutDependencies(type: Exec) {
+    commandLine npm, 'run', 'test:api'
 }
 
 // Define task dependencies to ensure the commands run in order
