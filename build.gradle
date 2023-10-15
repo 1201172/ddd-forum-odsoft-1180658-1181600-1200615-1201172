@@ -6,10 +6,6 @@ import org.gradle.internal.os.OperatingSystem
 OperatingSystem os = OperatingSystem.current();
 String npm = os.isLinux() || os.isMacOsX() ? 'npm' : 'npm.cmd'
 
-task installDependenciesAndBuild(type: Exec) {
-        commandLine npm, 'run-script', 'installDependenciesAndBuild'   
-}
-
 node {
     // Version of node to use.
     version = '12.22.12'
@@ -22,6 +18,10 @@ node {
     download = true
 }
 
+task installDependenciesAndBuild(type: Exec) {
+        commandLine npm, 'run-script', 'installDependenciesAndBuild'
+}
+
 task docs_generation(type: Exec) {
     commandLine 'jsdoc', '-c', 'jsdoc.json'
 }
@@ -29,7 +29,7 @@ task docs_generation(type: Exec) {
 /**
 * @brief A tarefa 'executeCommand' executa um script para gerar ficheiros .svg a partir de ficheiros .puml
 * @param type: tipo de tarefa a executar
-*/ 
+*/
 task executeCommand(type: Exec) {
     def osName = System.getProperty("os.name").toLowerCase()
 
@@ -40,7 +40,9 @@ task executeCommand(type: Exec) {
         commandLine 'cmd', '/c', "${project.projectDir}/bin/generate-plantuml-diagrams.bat"
         workingDir "${project.projectDir}/bin"
     } else {
-        throw new GradleException("Sistema operacional não suportado.")
+        throw new GradleException("Sistema operacional nï¿½o suportado.")
+    }
+}
 
 task shutdownDocker(type: Exec) {
     commandLine 'docker', 'compose', 'down'
@@ -127,8 +129,3 @@ runApiTests.dependsOn 'npmInstall'
 
 // Optionally, specify a description for the task
 runApiTests.description = 'Run npm commands in order: db:delete:dev, db:create:dev, migrate:dev, jest'
-    }
-}
-
-
-
