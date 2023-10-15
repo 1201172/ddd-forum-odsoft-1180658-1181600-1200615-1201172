@@ -25,10 +25,10 @@ function runCommand(command, successMessage) {
   });
 }
 
-// Run the build script using npm run-script build
+// Run the build script using npm install
 runCommand('npm install', 'Dependencies installed successfully.');
 
-// Install dependencies using npm install
+// Install dependencies using npm run-script build
 runCommand('npm run-script build', 'Build script completed successfully.');
 
 

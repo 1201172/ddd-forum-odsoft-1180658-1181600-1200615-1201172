@@ -4,10 +4,10 @@ plugins {
 
 import org.gradle.internal.os.OperatingSystem
 OperatingSystem os = OperatingSystem.current();
-String npm = os.isLinux() ? 'npm' : 'npm.cmd'
+String npm = os.isLinux() || os.isMacOsX() ? 'npm' : 'npm.cmd'
 
 task installDependenciesAndBuild(type: Exec) {
-        commandLine npm, 'run-script', 'installDependenciesAndBuild'
+        commandLine npm, 'run-script', 'installDependenciesAndBuild'   
 }
 
 node {
@@ -21,6 +21,11 @@ node {
     // If false, it will try to use globally installed node.
     download = true
 }
+
+task docs_generation(type: Exec) {
+    commandLine 'jsdoc', '-c', 'jsdoc.json'
+}
+
 
 task shutdownDocker(type: Exec) {
     commandLine 'docker', 'compose', 'down'
