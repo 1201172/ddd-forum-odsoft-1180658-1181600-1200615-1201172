@@ -36,19 +36,66 @@ task setupDocker(type: Exec) {
     commandLine npm, 'run', 'setup:dev'
 }
 
-task initializeBackend(type: Exec) {
-    dependsOn initializeDocker //let's assume database is setup?
-    commandLine npm, 'run', 'start:dev', '-d'
+task initializeBackend {
+    dependsOn initializeDocker // Assuming the database is set up
+
+    doLast {
+
+        def command = "npm run start:dev -d"
+
+        def processBuilder = new ProcessBuilder("cmd", "/c", command)
+        processBuilder.redirectErrorStream(true)
+
+        // Start the command in the background
+        def process = processBuilder.start()
+        // Define a maximum wait time (in seconds)
+        def maxWaitTimeInSeconds = 60
+
+        // Define the expected message that indicates the application has started
+        def expectedMessage = "[Redis]: Connected to redis server at :6379"  // Replace with the actual message
+
+        // Create input, output, and error streams
+        def input = process.outputStream
+        def output = new InputStreamReader(process.inputStream)
+        def error = new InputStreamReader(process.errorStream)
+
+        // Monitor the output for the expected message
+        waitForOutput(output, expectedMessage, maxWaitTimeInSeconds)
+
+         println "Finished."
+    }
 }
 
-task npm_run_test_dev(type: Exec) {
-    dependsOn 'npmInstall' // Add the npmInstall task as a dependency
-    commandLine npm, 'run', 'test:dev'
+def waitForOutput(reader, expectedMessage, maxWaitTimeInSeconds) {
+    def startTime = System.currentTimeMillis()
+    def buffer = new char[1024]
+    while (System.currentTimeMillis() - startTime < maxWaitTimeInSeconds * 1000) {
+        println "Entered in input."
+        // Read from the process's output stream
+        def bytesRead = reader.read(buffer)
+        if (bytesRead > 0) {
+            def output = new String(buffer, 0, bytesRead)
+            if (output.contains(expectedMessage)) {
+                println "Backend application has started."
+                return
+            }
+        }
+        try {
+            // Sleep for a short duration before checking again
+            Thread.sleep(1000)
+        } catch (InterruptedException e) {
+            throw new GradleException("Sleep interrupted", e)
+        }
+    }
+
+    println "Timeout: Backend application did not start within ${maxWaitTimeInSeconds} seconds."
+    // You can add error handling or other actions here.
 }
 
 task runApiTests(type: Exec) {
     dependsOn initializeBackend
     commandLine npm, 'run', 'test:api'
+    commandLine 'docker', 'compose', 'down' 
 }
 
 task runApiTestsWithoutDependencies(type: Exec) {
