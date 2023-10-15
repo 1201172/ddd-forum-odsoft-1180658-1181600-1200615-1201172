@@ -11,7 +11,7 @@ for /r "../docs" %%f in (*.puml) do (
     set OUTPUT_FILE=!OUTPUT_FILE:.puml=.svg!
     set OUTPUT_FILE=%INPUT_FOLDER%\%OUTPUT_FILE%
 
-    java -jar "%PLANTUML_PATH%" -tsvg "%%f" -o "%OUTPUT_FILE%" ../svg
+    java -jar "%PLANTUML_PATH%" -tsvg "%%f" -o "../svg/%OUTPUT_FILE%" ../svg
 )
 
 echo Finished

@@ -1,0 +1,14 @@
+@startuml N1_PV_limitListPopularPosts
+
+actor RegisteredUser
+participant Forum
+participant REST_API
+
+RegisteredUser ->> Forum : "authenticates"
+
+Forum -> REST_API : REST get(/posts/popular)
+Forum <-- REST_API : 200 ok
+
+RegisteredUser <-- Forum: list of 5 posts
+
+@enduml

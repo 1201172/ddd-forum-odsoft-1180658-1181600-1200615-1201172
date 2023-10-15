@@ -97,7 +97,6 @@ export class PostRepo implements IPostRepo {
     const PostModel = this.models.Post;
     const detailsQuery = this.createBaseDetailsQuery();
     detailsQuery.offset = offset ? offset : detailsQuery.offset;
-    detailsQuery.limit = 5;
     detailsQuery['order'] = [
       ['points', 'DESC'],
     ];
